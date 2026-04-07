@@ -8,6 +8,8 @@
   --color-primary: #004a99; /* HCMUE Blue */
   --color-secondary: #f0f4f8;
   --color-accent: #e63946;
+  --color-cerulean: #007BA7;
+  --color-jasper: #D73B3E;
 }
 
 @layer base {

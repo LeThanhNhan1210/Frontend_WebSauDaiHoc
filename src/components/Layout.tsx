@@ -7,6 +7,7 @@ export default function Layout() {
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/application/step-1';
   
   const roleFromState = location.state?.role;
+  const usernameFromState = location.state?.username;
   const role = roleFromState || (
                location.pathname.startsWith('/admin') ? 'admin' : 
                location.pathname.startsWith('/validator') ? 'validator' : 'candidate'
@@ -18,7 +19,7 @@ export default function Layout() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar role={role} />
+      <Sidebar role={role} username={usernameFromState} />
       <main className="flex-1 overflow-y-auto">
         <Outlet />
       </main>

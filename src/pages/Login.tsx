@@ -16,35 +16,35 @@ export default function Login() {
 
     // 1. Applicant (Thí sinh)
     if (user === '079123456789' && pass === 'Candidate@2024') {
-      navigate('/candidate/dashboard', { state: { role: 'candidate' } });
+      navigate('/candidate/dashboard', { state: { role: 'candidate', username: 'Thí sinh (079123456789)' } });
     }
     // 2. Reviewer (Chuyên viên Tuyển sinh)
     else if (user === 'reviewer_dhsp_01' && pass === 'Reviewer@Secure') {
-      navigate('/validator/dashboard', { state: { role: 'reviewer' } });
+      navigate('/validator/dashboard', { state: { role: 'reviewer', username: 'Chuyên viên TN (reviewer_dhsp_01)' } });
     }
     // 3. Validator (Chuyên viên Thẩm định)
     else if (user === 'validator_dhsp_01' && pass === 'Validator@Verify') {
-      navigate('/validator/dashboard', { state: { role: 'validator' } });
+      navigate('/validator/dashboard', { state: { role: 'validator', username: 'Thẩm định viên (validator_dhsp_01)' } });
     }
     // 4. Approver (Trưởng phòng)
     else if (user === 'approver_dhsp_head' && pass === 'Approver@Final') {
-      navigate('/admin/approvals', { state: { role: 'approver' } });
+      navigate('/admin/approvals', { state: { role: 'approver', username: 'Trưởng phòng (approver_dhsp_head)' } });
     }
     // 5. Viewer (Ban Giám hiệu)
     else if (user === 'bgh_viewer_01' && pass === 'Leader@Dashboard') {
-      navigate('/admin/analytics', { state: { role: 'viewer' } });
+      navigate('/admin/analytics', { state: { role: 'viewer', username: 'Ban Giám hiệu (bgh_viewer_01)' } });
     }
     // 6. Admin System (Quản trị Danh mục)
     else if (user === 'admin_system_01' && pass === 'Admin@System') {
-      navigate('/admin/dashboard', { state: { role: 'admin' } });
+      navigate('/admin/dashboard', { state: { role: 'admin', username: 'Quản trị Hệ thống (admin_system_01)' } });
     }
     // 6b. Admin Security (Quản lý Tài khoản)
     else if (user === 'admin_security_01' && pass === 'Admin@Security') {
-      navigate('/admin/security', { state: { role: 'admin' } });
+      navigate('/admin/security', { state: { role: 'admin', username: 'Quản lý Tài khoản (admin_security_01)' } });
     }
     // 7. Audit (Kiểm tra Nhật ký)
     else if (user === 'auditor_dhsp_01' && pass === 'Audit@Trace') {
-      navigate('/admin/audit-logs', { state: { role: 'auditor' } });
+      navigate('/admin/audit-logs', { state: { role: 'auditor', username: 'Kiểm toán viên (auditor_dhsp_01)' } });
     }
     // Fallback for demo
     else if (pass === 'admin') {

@@ -39,7 +39,14 @@ export default function App() {
           
           {/* Validator Routes */}
           <Route path="validator/dashboard" element={<Dashboard role="validator" />} />
-          <Route path="validator/verification" element={<Verification />} />
+          <Route path="validator/verification" element={<Verification role="validator" />} />
+          
+          {/* Reviewer Routes */}
+          <Route path="reviewer/dashboard" element={<Dashboard role="reviewer" />} />
+          <Route path="reviewer/verification" element={<Verification role="reviewer" />} />
+
+          {/* Viewer Routes */}
+          <Route path="viewer/dashboard" element={<Dashboard role="viewer" />} />
           
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/login" replace />} />

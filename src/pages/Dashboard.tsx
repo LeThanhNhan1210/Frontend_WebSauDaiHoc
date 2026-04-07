@@ -28,7 +28,10 @@ import {
   Tooltip, 
   ResponsiveContainer,
   AreaChart,
-  Area
+  Area,
+  PieChart,
+  Pie,
+  Cell
 } from 'recharts';
 
 const data = [
@@ -46,7 +49,9 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ role }: DashboardProps) {
-  if (role === 'admin' || role === 'viewer' || role === 'auditor' || role === 'approver') {
+  if (role === 'viewer') {
+    return <ViewerDashboard />;
+  } else if (role === 'admin' || role === 'auditor' || role === 'approver') {
     return <AdminDashboard role={role} />;
   } else if (role === 'validator' || role === 'reviewer') {
     return <ValidatorDashboard role={role} />;
@@ -64,7 +69,6 @@ function AdminDashboard({ role }: { role: string }) {
   ];
 
   const getTitle = () => {
-    if (role === 'viewer') return 'Báo cáo Thống kê (Ban Giám hiệu)';
     if (role === 'auditor') return 'Giám sát Hệ thống (Kiểm toán)';
     if (role === 'approver') return 'Tổng quan Phê duyệt (Trưởng phòng)';
     return 'Quản trị Hệ thống';
@@ -398,6 +402,23 @@ function CandidateDashboard() {
 
 function ValidatorDashboard({ role }: { role: string }) {
   const isReviewer = role === 'reviewer';
+  
+  const reviewerStats = [
+    { label: 'Hồ sơ mới tiếp nhận', value: '42', icon: FileText, color: 'bg-cerulean' },
+    { label: 'Cần kiểm tra nội dung', value: '18', icon: AlertCircle, color: 'bg-jasper' },
+    { label: 'Đã chuyển thẩm định', value: '156', icon: CheckCircle, color: 'bg-green-500' },
+    { label: 'Hồ sơ bị trả lại', value: '5', icon: XCircle, color: 'bg-red-500' },
+  ];
+
+  const validatorStats = [
+    { label: 'Hồ sơ chờ thẩm định', value: '24', icon: ShieldCheck, color: 'bg-cerulean' },
+    { label: 'Đã thẩm định xong', value: '128', icon: CheckCircle, color: 'bg-green-500' },
+    { label: 'Cần xác minh điểm', value: '12', icon: Activity, color: 'bg-jasper' },
+    { label: 'Hồ sơ không hợp lệ', value: '3', icon: AlertCircle, color: 'bg-red-500' },
+  ];
+
+  const stats = isReviewer ? reviewerStats : validatorStats;
+
   return (
     <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -406,40 +427,36 @@ function ValidatorDashboard({ role }: { role: string }) {
             {isReviewer ? 'Tiếp nhận & Kiểm tra hồ sơ' : 'Thẩm định hồ sơ'}
           </h1>
           <p className="text-gray-500">
-            {isReviewer ? 'Kiểm tra tính đầy đủ của hồ sơ' : 'Thẩm định tính pháp lý của văn bằng'}
+            {isReviewer ? 'Kiểm tra tính đầy đủ và tính chính xác của nội dung hồ sơ' : 'Thẩm định tính pháp lý của văn bằng và xác minh điểm'}
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="btn-primary flex items-center space-x-2">
+          <button className="btn-primary flex items-center space-x-2 bg-cerulean hover:bg-blue-800">
             <CheckCircle className="w-4 h-4" />
-            <span>Bắt đầu xác minh</span>
+            <span>{isReviewer ? 'Bắt đầu kiểm tra' : 'Bắt đầu thẩm định'}</span>
           </button>
         </div>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-          <p className="text-xs text-gray-500 uppercase tracking-wider font-bold mb-1">Đã xử lý hôm nay</p>
-          <p className="text-3xl font-bold text-gray-900">12/36</p>
-          <div className="w-full bg-gray-100 h-2 rounded-full mt-4">
-            <div className="bg-green-500 h-full rounded-full w-1/3"></div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {stats.map((stat, idx) => (
+          <div key={idx} className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center space-x-4">
+            <div className={cn("p-3 rounded-xl text-white shadow-lg", stat.color)}>
+              <stat.icon className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-xs text-gray-500 uppercase tracking-wider font-bold">{stat.label}</p>
+              <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+            </div>
           </div>
-        </div>
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-          <p className="text-xs text-gray-500 uppercase tracking-wider font-bold mb-1">Thời gian TB / hồ sơ</p>
-          <p className="text-3xl font-bold text-gray-900">8.5 phút</p>
-          <p className="text-xs text-green-600 mt-2 font-medium">Nhanh hơn 12% so với hôm qua</p>
-        </div>
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-          <p className="text-xs text-gray-500 uppercase tracking-wider font-bold mb-1">Tỷ lệ hồ sơ lỗi</p>
-          <p className="text-3xl font-bold text-gray-900">14%</p>
-          <p className="text-xs text-amber-600 mt-2 font-medium">Chủ yếu thiếu bảng điểm</p>
-        </div>
+        ))}
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-          <h3 className="font-bold text-gray-900">Danh sách chờ xác minh</h3>
+          <h3 className="font-bold text-gray-900">
+            {isReviewer ? 'Hồ sơ mới nộp' : 'Hồ sơ chờ thẩm định'}
+          </h3>
           <div className="flex items-center gap-2">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -452,17 +469,17 @@ function ValidatorDashboard({ role }: { role: string }) {
             <thead>
               <tr className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
                 <th className="px-6 py-4 font-semibold">Ứng viên</th>
-                <th className="px-6 py-4 font-semibold">Thời gian chờ</th>
-                <th className="px-6 py-4 font-semibold">Độ ưu tiên</th>
+                <th className="px-6 py-4 font-semibold">{isReviewer ? 'Ngày nộp' : 'Thời gian chờ'}</th>
+                <th className="px-6 py-4 font-semibold">{isReviewer ? 'Trạng thái nội dung' : 'Độ ưu tiên'}</th>
                 <th className="px-6 py-4 font-semibold">Thao tác</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {[
-                { name: 'Nguyễn Văn A', wait: '15 phút', priority: 'Cao', color: 'text-red-600 bg-red-50' },
-                { name: 'Trần Thị B', wait: '45 phút', priority: 'Trung bình', color: 'text-amber-600 bg-amber-50' },
-                { name: 'Lê Văn C', wait: '1 giờ', priority: 'Thấp', color: 'text-blue-600 bg-blue-50' },
-                { name: 'Phạm Minh D', wait: '2 giờ', priority: 'Thấp', color: 'text-blue-600 bg-blue-50' },
+                { name: 'Nguyễn Văn A', wait: '15 phút', priority: 'Cao', color: 'text-red-600 bg-red-50', status: 'Chưa kiểm tra' },
+                { name: 'Trần Thị B', wait: '45 phút', priority: 'Trung bình', color: 'text-amber-600 bg-amber-50', status: 'Sai ảnh thẻ' },
+                { name: 'Lê Văn C', wait: '1 giờ', priority: 'Thấp', color: 'text-blue-600 bg-blue-50', status: 'Chưa kiểm tra' },
+                { name: 'Phạm Minh D', wait: '2 giờ', priority: 'Thấp', color: 'text-blue-600 bg-blue-50', status: 'Chưa kiểm tra' },
               ].map((row, idx) => (
                 <tr key={idx} className="hover:bg-gray-50 transition-colors group">
                   <td className="px-6 py-4">
@@ -475,19 +492,159 @@ function ValidatorDashboard({ role }: { role: string }) {
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-600">{row.wait}</td>
                   <td className="px-6 py-4">
-                    <span className={cn("px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider", row.color)}>
-                      {row.priority}
+                    <span className={cn(
+                      "px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider",
+                      isReviewer ? (row.status === 'Chưa kiểm tra' ? 'bg-amber-50 text-amber-600' : 'bg-red-50 text-red-600') : row.color
+                    )}>
+                      {isReviewer ? row.status : row.priority}
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <button className="px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-lg hover:bg-blue-800 transition-colors">
-                      Xử lý ngay
+                    <button className="px-4 py-1.5 bg-cerulean text-white text-xs font-bold rounded-lg hover:bg-blue-800 transition-colors">
+                      {isReviewer ? 'Kiểm tra nội dung' : 'Thẩm định ngay'}
                     </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ViewerDashboard() {
+  const stats = [
+    { label: 'Số lượng hồ sơ', value: '1,284', icon: FileText, color: 'bg-cerulean' },
+    { label: 'Số lượng trúng tuyển', value: '856', icon: CheckCircle, color: 'bg-jasper' },
+    { label: 'Tỷ lệ trúng tuyển', value: '66.7%', icon: TrendingUp, color: 'bg-green-500' },
+    { label: 'Ngành thu hút nhất', value: 'CNTT', icon: Activity, color: 'bg-amber-500' },
+  ];
+
+  const geoData = [
+    { name: 'TP. Hồ Chí Minh', value: 450 },
+    { name: 'Đồng Nai', value: 180 },
+    { name: 'Bình Dương', value: 150 },
+    { name: 'Long An', value: 120 },
+    { name: 'Khác', value: 384 },
+  ];
+
+  const majorData = [
+    { name: 'CNTT', value: 320 },
+    { name: 'Ngôn ngữ Anh', value: 280 },
+    { name: 'Quản lý Giáo dục', value: 240 },
+    { name: 'Tâm lý học', value: 220 },
+    { name: 'Toán học', value: 180 },
+  ];
+
+  const nvData = [
+    { name: 'Nguyện vọng 1', value: 850 },
+    { name: 'Nguyện vọng 2', value: 320 },
+    { name: 'Nguyện vọng 3', value: 114 },
+  ];
+
+  const COLORS = ['#007BA7', '#D73B3E', '#22c55e', '#f59e0b', '#6366f1'];
+
+  return (
+    <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Dashboard Báo cáo Thống kê</h1>
+          <p className="text-gray-500">Giám sát và theo dõi tiến trình tuyển sinh (Ban Giám hiệu)</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <button className="p-2 bg-white border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+            <Download className="w-5 h-5" />
+          </button>
+          <button className="btn-primary bg-cerulean hover:bg-blue-800">
+            Xuất báo cáo HEMIS
+          </button>
+        </div>
+      </header>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {stats.map((stat, idx) => (
+          <div key={idx} className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center space-x-4">
+            <div className={cn("p-3 rounded-xl text-white shadow-lg", stat.color)}>
+              <stat.icon className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-xs text-gray-500 uppercase tracking-wider font-bold">{stat.label}</p>
+              <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Phân bố theo tỉnh thành */}
+        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+          <h3 className="font-bold text-gray-900 mb-6">Phân bố theo tỉnh thành</h3>
+          <div className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={geoData} layout="vertical">
+                <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#f0f0f0" />
+                <XAxis type="number" hide />
+                <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#4b5563'}} width={100} />
+                <Tooltip cursor={{fill: 'transparent'}} />
+                <Bar dataKey="value" fill="#007BA7" radius={[0, 4, 4, 0]} barSize={20} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Top các ngành đào tạo */}
+        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+          <h3 className="font-bold text-gray-900 mb-6">Top các ngành đào tạo</h3>
+          <div className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={majorData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={100}
+                  paddingAngle={5}
+                  dataKey="value"
+                >
+                  {majorData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="grid grid-cols-2 gap-2 mt-4">
+            {majorData.map((entry, index) => (
+              <div key={entry.name} className="flex items-center space-x-2">
+                <div className="w-3 h-3 rounded-full" style={{backgroundColor: COLORS[index % COLORS.length]}}></div>
+                <span className="text-xs text-gray-600">{entry.name} ({entry.value})</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Thống kê nguyện vọng */}
+        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm lg:col-span-2">
+          <h3 className="font-bold text-gray-900 mb-6">Thống kê nguyện vọng (NV1, NV2, NV3)</h3>
+          <div className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={nvData}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#4b5563'}} />
+                <YAxis axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#4b5563'}} />
+                <Tooltip />
+                <Bar dataKey="value" radius={[4, 4, 0, 0]} barSize={60}>
+                  {nvData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={index === 0 ? '#D73B3E' : index === 1 ? '#007BA7' : '#22c55e'} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
     </div>

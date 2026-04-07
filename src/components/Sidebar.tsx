@@ -16,9 +16,10 @@ import { cn } from '../lib/utils';
 
 interface SidebarProps {
   role: 'candidate' | 'approver' | 'validator' | 'reviewer' | 'viewer' | 'admin' | 'auditor';
+  username?: string;
 }
 
-export default function Sidebar({ role }: SidebarProps) {
+export default function Sidebar({ role, username }: SidebarProps) {
   const navigate = useNavigate();
   const adminLinks = [
     { to: '/admin/dashboard', icon: LayoutDashboard, label: 'Tổng quan' },
@@ -120,12 +121,14 @@ export default function Sidebar({ role }: SidebarProps) {
             </div>
             <div className="overflow-hidden">
               <p className="text-sm font-bold text-gray-900 truncate">
-                {role === 'admin' ? 'Quản trị viên' : 
-                 role === 'candidate' ? 'Thí sinh' :
-                 role === 'validator' ? 'Thẩm định viên' :
-                 role === 'reviewer' ? 'Chuyên viên TN' :
-                 role === 'viewer' ? 'Ban Giám hiệu' :
-                 role === 'auditor' ? 'Kiểm toán viên' : 'Trưởng phòng'}
+                {username || (
+                  role === 'admin' ? 'Quản trị viên' : 
+                  role === 'candidate' ? 'Thí sinh' :
+                  role === 'validator' ? 'Thẩm định viên' :
+                  role === 'reviewer' ? 'Chuyên viên TN' :
+                  role === 'viewer' ? 'Ban Giám hiệu' :
+                  role === 'auditor' ? 'Kiểm toán viên' : 'Trưởng phòng'
+                )}
               </p>
               <p className="text-[10px] text-gray-500 uppercase tracking-wider">{role}</p>
             </div>

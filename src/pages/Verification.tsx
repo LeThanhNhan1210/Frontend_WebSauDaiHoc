@@ -25,7 +25,8 @@ import {
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
-export default function Verification() {
+export default function Verification({ role }: { role?: string }) {
+  const isReviewer = role === 'reviewer';
   const [selectedCandidate, setSelectedCandidate] = useState<any>(null);
 
   const candidates = [
@@ -37,15 +38,19 @@ export default function Verification() {
   ];
 
   if (selectedCandidate) {
-    return <VerificationDetail candidate={selectedCandidate} onBack={() => setSelectedCandidate(null)} />;
+    return <VerificationDetail candidate={selectedCandidate} onBack={() => setSelectedCandidate(null)} role={role} />;
   }
 
   return (
     <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Xác minh hồ sơ</h1>
-          <p className="text-gray-500">Danh sách hồ sơ cần thẩm định tính hợp lệ của văn bằng và tài liệu</p>
+          <h1 className="text-2xl font-bold text-gray-900">
+            {isReviewer ? 'Tiếp nhận & Kiểm tra nội dung' : 'Thẩm định hồ sơ'}
+          </h1>
+          <p className="text-gray-500">
+            {isReviewer ? 'Kiểm tra tính đầy đủ và tính chính xác của nội dung hồ sơ' : 'Thẩm định tính pháp lý của văn bằng và xác minh điểm'}
+          </p>
         </div>
         <div className="flex items-center gap-3">
           <div className="relative">
