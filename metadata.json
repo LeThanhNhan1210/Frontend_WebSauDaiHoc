@@ -1,0 +1,5 @@
+{
+  "name": "HCMUE Postgraduate Admission System",
+  "description": "A comprehensive postgraduate admission management system for HCMUE, featuring candidate registration, document verification, and administrative dashboards.",
+  "requestFramePermissions": []
+}
