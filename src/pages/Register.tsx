@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { UserPlus, ArrowLeft, ShieldCheck, Mail, Phone, User } from 'lucide-react';
+import bgHCMUE from '../lib/img/nen_sp.jpg';
+import logoHCMUE from '../lib/img/SuPham.png';
 
 export default function Register() {
   const [step, setStep] = useState(1);
@@ -17,12 +19,11 @@ export default function Register() {
     <div className="min-h-screen flex flex-col md:flex-row bg-white">
       {/* Left Side - Info */}
       <div className="hidden md:flex md:w-1/3 bg-primary relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 opacity-20">
           <img 
-            src="https://storage.googleapis.com/static.antigravity.dev/b5094ebe-f2f9-454b-9a0e-be3994071cb9/input_file_1.png" 
+            src={bgHCMUE} 
             alt="HCMUE" 
             className="w-full h-full object-cover"
-            referrerPolicy="no-referrer"
           />
         </div>
         <div className="relative z-10 p-12 flex flex-col justify-center text-white">
@@ -32,10 +33,9 @@ export default function Register() {
           >
             <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mb-8 shadow-2xl">
               <img 
-                src="https://storage.googleapis.com/static.antigravity.dev/b5094ebe-f2f9-454b-9a0e-be3994071cb9/input_file_0.png" 
+                src={logoHCMUE} 
                 alt="HCMUE Logo" 
-                className="w-12 h-12"
-                referrerPolicy="no-referrer"
+                className="w-14 h-14"
               />
             </div>
             <h1 className="text-3xl font-bold mb-4">Đăng ký tài khoản</h1>

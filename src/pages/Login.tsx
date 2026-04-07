@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { LogIn, UserPlus, Eye, EyeOff, ShieldCheck } from 'lucide-react';
+import bgHCMUE from '../lib/img/nen_sp.jpg';
+import logoHCMUE from '../lib/img/SuPham.png';
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -9,48 +11,57 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  const handleQuickLogin = (roleType: string) => {
+    switch(roleType) {
+      case 'reviewer':
+        navigate('/reviewer/dashboard', { state: { role: 'reviewer', username: 'Chuyên viên TN (Test)' } });
+        break;
+      case 'validator':
+        navigate('/validator/dashboard', { state: { role: 'validator', username: 'Thẩm định viên (Test)' } });
+        break;
+      case 'approver':
+        navigate('/admin/approvals', { state: { role: 'approver', username: 'Trưởng phòng (Test)' } });
+        break;
+      case 'viewer':
+        navigate('/viewer/dashboard', { state: { role: 'viewer', username: 'Ban Giám hiệu (Test)' } });
+        break;
+      case 'admin':
+        navigate('/admin/dashboard', { state: { role: 'admin', username: 'Quản trị viên (Test)' } });
+        break;
+      case 'auditor':
+        navigate('/admin/audit-logs', { state: { role: 'auditor', username: 'Kiểm toán viên (Test)' } });
+        break;
+      default:
+        navigate('/candidate/dashboard', { state: { role: 'candidate', username: 'Thí sinh (Test)' } });
+    }
+  };
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    const user = cccd;
-    const pass = password;
+    const user = cccd.toLowerCase();
 
-    // 1. Applicant (Thí sinh)
-    if (user === '079123456789' && pass === 'Candidate@2024') {
-      navigate('/candidate/dashboard', { state: { role: 'candidate', username: 'Thí sinh (079123456789)' } });
-    }
-    // 2. Reviewer (Chuyên viên Tuyển sinh)
-    else if (user === 'reviewer_dhsp_01' && pass === 'Reviewer@Secure') {
-      navigate('/validator/dashboard', { state: { role: 'reviewer', username: 'Chuyên viên TN (reviewer_dhsp_01)' } });
-    }
-    // 3. Validator (Chuyên viên Thẩm định)
-    else if (user === 'validator_dhsp_01' && pass === 'Validator@Verify') {
-      navigate('/validator/dashboard', { state: { role: 'validator', username: 'Thẩm định viên (validator_dhsp_01)' } });
-    }
-    // 4. Approver (Trưởng phòng)
-    else if (user === 'approver_dhsp_head' && pass === 'Approver@Final') {
-      navigate('/admin/approvals', { state: { role: 'approver', username: 'Trưởng phòng (approver_dhsp_head)' } });
-    }
-    // 5. Viewer (Ban Giám hiệu)
-    else if (user === 'bgh_viewer_01' && pass === 'Leader@Dashboard') {
-      navigate('/admin/analytics', { state: { role: 'viewer', username: 'Ban Giám hiệu (bgh_viewer_01)' } });
-    }
-    // 6. Admin System (Quản trị Danh mục)
-    else if (user === 'admin_system_01' && pass === 'Admin@System') {
-      navigate('/admin/dashboard', { state: { role: 'admin', username: 'Quản trị Hệ thống (admin_system_01)' } });
-    }
-    // 6b. Admin Security (Quản lý Tài khoản)
-    else if (user === 'admin_security_01' && pass === 'Admin@Security') {
-      navigate('/admin/security', { state: { role: 'admin', username: 'Quản lý Tài khoản (admin_security_01)' } });
-    }
-    // 7. Audit (Kiểm tra Nhật ký)
-    else if (user === 'auditor_dhsp_01' && pass === 'Audit@Trace') {
-      navigate('/admin/audit-logs', { state: { role: 'auditor', username: 'Kiểm toán viên (auditor_dhsp_01)' } });
-    }
-    // Fallback for demo
-    else if (pass === 'admin') {
-      navigate('/admin/dashboard');
-    } else {
-      navigate('/candidate/dashboard');
+    // Phân luồng đăng nhập dựa vào từ khóa trong username (để dễ demo)
+    if (user.includes('reviewer')) {
+       navigate('/reviewer/dashboard', { state: { role: 'reviewer', username: 'Chuyên viên TN (' + cccd + ')' } });
+    } 
+    else if (user.includes('validator') || user.includes('thamdinh')) {
+       navigate('/validator/dashboard', { state: { role: 'validator', username: 'Thẩm định viên (' + cccd + ')' } });
+    } 
+    else if (user.includes('approver') || user.includes('truongphong')) {
+       navigate('/admin/approvals', { state: { role: 'approver', username: 'Trưởng phòng (' + cccd + ')' } });
+    } 
+    else if (user.includes('viewer') || user.includes('bgh')) {
+       navigate('/viewer/dashboard', { state: { role: 'viewer', username: 'Ban Giám hiệu (' + cccd + ')' } });
+    } 
+    else if (user.includes('admin')) {
+       navigate('/admin/dashboard', { state: { role: 'admin', username: 'Quản trị viên (' + cccd + ')' } });
+    } 
+    else if (user.includes('auditor') || user.includes('kiemtoan')) {
+       navigate('/admin/audit-logs', { state: { role: 'auditor', username: 'Kiểm toán viên (' + cccd + ')' } });
+    } 
+    else {
+       // Mặc định cho Thí sinh
+       navigate('/candidate/dashboard', { state: { role: 'candidate', username: cccd ? 'Thí sinh (' + cccd + ')' : 'Nguyễn Văn A' } });
     }
   };
 
@@ -60,10 +71,9 @@ export default function Login() {
       <div className="hidden md:flex md:w-1/2 bg-primary relative overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <img 
-            src="https://picsum.photos/seed/hcmue/1200/1200" 
+            src={bgHCMUE} 
             alt="HCMUE" 
             className="w-full h-full object-cover"
-            referrerPolicy="no-referrer"
           />
         </div>
         <div className="relative z-10 p-12 flex flex-col justify-center text-white">
@@ -74,10 +84,9 @@ export default function Login() {
           >
             <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-8 shadow-2xl">
               <img 
-                src="https://upload.wikimedia.org/wikipedia/vi/thumb/3/30/Logo_HCMUE.png/200px-Logo_HCMUE.png" 
+                src={logoHCMUE}
                 alt="HCMUE Logo" 
                 className="w-16 h-16"
-                referrerPolicy="no-referrer"
               />
             </div>
             <h1 className="text-4xl font-bold mb-4 leading-tight">
@@ -106,10 +115,9 @@ export default function Login() {
         >
           <div className="md:hidden text-center mb-8">
             <img 
-              src="https://upload.wikimedia.org/wikipedia/vi/thumb/3/30/Logo_HCMUE.png/200px-Logo_HCMUE.png" 
+              src={logoHCMUE}
               alt="HCMUE Logo" 
               className="w-16 h-16 mx-auto mb-4"
-              referrerPolicy="no-referrer"
             />
             <h2 className="text-2xl font-bold text-primary">Tuyển sinh Sau đại học</h2>
           </div>
@@ -183,6 +191,19 @@ export default function Login() {
               <span>Đăng ký tài khoản mới</span>
             </Link>
           </form>
+
+          {/* Quick Demo Login Panel */}
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4 text-center">Bảng điều khiển nhanh (Dành cho Test)</p>
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
+              <button type="button" onClick={() => handleQuickLogin('admin')} className="text-xs py-2 px-2 bg-gray-50 border border-gray-200 hover:bg-gray-100 rounded-lg text-gray-700 font-medium transition-colors">Quản trị Hệ thống</button>
+              <button type="button" onClick={() => handleQuickLogin('viewer')} className="text-xs py-2 px-2 bg-gray-50 border border-gray-200 hover:bg-gray-100 rounded-lg text-gray-700 font-medium transition-colors">Ban Giám hiệu</button>
+              <button type="button" onClick={() => handleQuickLogin('approver')} className="text-xs py-2 px-2 bg-gray-50 border border-gray-200 hover:bg-gray-100 rounded-lg text-gray-700 font-medium transition-colors">Trưởng phòng</button>
+              <button type="button" onClick={() => handleQuickLogin('validator')} className="text-xs py-2 px-2 bg-gray-50 border border-gray-200 hover:bg-gray-100 rounded-lg text-gray-700 font-medium transition-colors">Thẩm định viên</button>
+              <button type="button" onClick={() => handleQuickLogin('reviewer')} className="text-xs py-2 px-2 bg-gray-50 border border-gray-200 hover:bg-gray-100 rounded-lg text-gray-700 font-medium transition-colors">Chuyên viên</button>
+              <button type="button" onClick={() => handleQuickLogin('candidate')} className="text-xs py-2 px-2 bg-gray-50 border border-gray-200 hover:bg-gray-100 rounded-lg text-gray-700 font-medium transition-colors">Thí sinh</button>
+            </div>
+          </div>
 
           <p className="mt-8 text-center text-sm text-gray-500">
             &copy; 2026 Trường Đại học Sư phạm TP. Hồ Chí Minh. <br />

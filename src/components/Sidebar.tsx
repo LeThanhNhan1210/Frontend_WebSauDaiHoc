@@ -13,6 +13,7 @@ import {
   FileText
 } from 'lucide-react';
 import { cn } from '../lib/utils';
+import logoUrl from '../lib/img/SuPham.png';
 
 interface SidebarProps {
   role: 'candidate' | 'approver' | 'validator' | 'reviewer' | 'viewer' | 'admin' | 'auditor';
@@ -41,13 +42,13 @@ export default function Sidebar({ role, username }: SidebarProps) {
   ];
 
   const reviewerLinks = [
-    { to: '/validator/dashboard', icon: LayoutDashboard, label: 'Tiếp nhận hồ sơ' },
-    { to: '/validator/verification', icon: FileCheck, label: 'Kiểm tra tính đầy đủ' },
+    { to: '/reviewer/dashboard', icon: LayoutDashboard, label: 'Tiếp nhận hồ sơ' },
+    { to: '/reviewer/verification', icon: FileCheck, label: 'Kiểm tra tính đầy đủ' },
   ];
 
   const viewerLinks = [
-    { to: '/admin/analytics', icon: BarChart3, label: 'Thống kê tuyển sinh' },
-    { to: '/admin/dashboard', icon: LayoutDashboard, label: 'Báo cáo tổng hợp' },
+    { to: '/viewer/dashboard', icon: BarChart3, label: 'Thống kê tuyển sinh' },
+    { to: '/viewer/dashboard', icon: LayoutDashboard, label: 'Báo cáo tổng hợp' },
   ];
 
   const auditorLinks = [
@@ -79,10 +80,9 @@ export default function Sidebar({ role, username }: SidebarProps) {
       <div className="p-6 border-b border-gray-100">
         <div className="flex items-center space-x-3">
           <img 
-            src="https://upload.wikimedia.org/wikipedia/vi/thumb/3/30/Logo_HCMUE.png/200px-Logo_HCMUE.png" 
+            src={logoUrl}
             alt="HCMUE Logo" 
             className="w-10 h-10"
-            referrerPolicy="no-referrer"
           />
           <div>
             <h1 className="font-bold text-primary text-sm leading-tight">HCMUE</h1>
@@ -97,6 +97,7 @@ export default function Sidebar({ role, username }: SidebarProps) {
           <NavLink
             key={link.to}
             to={link.to}
+            state={{ role, username }}
             className={({ isActive }) => cn(
               "flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 group",
               isActive 

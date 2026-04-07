@@ -15,6 +15,7 @@ import AuditLogs from './pages/AuditLogs';
 import Verification from './pages/Verification';
 import Approvals from './pages/Approvals';
 import Analytics from './pages/Analytics';
+import CandidateProfile from './pages/CandidateProfile';
 
 export default function App() {
   return (
@@ -36,6 +37,7 @@ export default function App() {
           {/* Candidate Routes */}
           <Route path="candidate/dashboard" element={<Dashboard role="candidate" />} />
           <Route path="candidate/application" element={<ApplicationStep1 />} />
+          <Route path="candidate/profile" element={<CandidateProfile />} />
           
           {/* Validator Routes */}
           <Route path="validator/dashboard" element={<Dashboard role="validator" />} />

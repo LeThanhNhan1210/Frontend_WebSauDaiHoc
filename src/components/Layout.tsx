@@ -10,7 +10,9 @@ export default function Layout() {
   const usernameFromState = location.state?.username;
   const role = roleFromState || (
                location.pathname.startsWith('/admin') ? 'admin' : 
-               location.pathname.startsWith('/validator') ? 'validator' : 'candidate'
+               location.pathname.startsWith('/validator') ? 'validator' : 
+               location.pathname.startsWith('/reviewer') ? 'reviewer' : 
+               location.pathname.startsWith('/viewer') ? 'viewer' : 'candidate'
   );
 
   if (isAuthPage) {

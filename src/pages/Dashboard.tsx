@@ -16,7 +16,10 @@ import {
   Download,
   Plus,
   Phone,
-  Mail
+  Mail,
+  Activity,
+  XCircle,
+  ShieldCheck
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { 
